@@ -43,7 +43,7 @@ Map<int,List<ScheduleEvent>> parse(String xlsxPath)
       //print(days[day]);
       //print(column);
       bool students = !column.contains("All weeks only SDU employees");
-      List<String> parts = column.replaceAll(RegExp("[^0-9,]", multiLine: true), "").split(',');
+      List<String> parts = column.replaceAll("\n",",").replaceAll(RegExp("[^0-9,]", multiLine: true), "").split(',');
       for (String part in parts)
       {
         if (part.isEmpty)

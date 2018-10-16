@@ -9,7 +9,7 @@ import 'package:PoolCalGenerator/iCalGenerator.dart' as iCalGenerator;
 
 main(List<String> arguments) async{
   //pdfDownloader.download("newPool.pdf");
-  print(await pdfChecker.check("newPool.pdf", "pool.pdf"));
+  checkForNewSchedule();
   //Timer.periodic(Duration(days: 1), (Timer t) => checkForNewSchedule());
 }
 
@@ -20,13 +20,13 @@ void checkForNewSchedule() async {
   String iCalPath = "pool.ics";
 
   try {
-    pdfDownloader.download(pdfPath);
+    await pdfDownloader.download(pdfPath);
   } catch (exception) {
     print(exception);
     return;
   }
 
-  if (!await pdfChecker.check(pdfPath, oldPDFPath)) {
+  if (await pdfChecker.check(pdfPath, oldPDFPath)) {
     File pdf = File(pdfPath);
     pdf.delete();
     return;
@@ -34,14 +34,17 @@ void checkForNewSchedule() async {
 
   try {
     await pdfConverter.convert(pdfPath, xlsxPath);
-    var map = xlsxParser.parse(xlsxPath);
-    iCalGenerator.generate(map, iCalPath);
+    var map = await xlsxParser.parse(xlsxPath);
+    await iCalGenerator.generate(map, iCalPath);
   } catch (exception) {
     print(exception);
   }
 
-  File pdf = File(pdfPath);
-  pdf.delete();
+  File pdf = File(oldPDFPath);
+  if (await pdf.exists())
+    pdf.delete();
+  File newPdf = File(pdfPath);
+  newPdf.rename(oldPDFPath);
   File xlsx = File(xlsxPath);
   xlsx.delete();
 }
