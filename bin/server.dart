@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:io';
+import 'package:cron/cron.dart';
 
 import 'package:PoolCalGenerator/pdfDownloader.dart' as pdfDownloader;
 import 'package:PoolCalGenerator/pdfChecker.dart' as pdfChecker;
@@ -8,9 +8,8 @@ import 'package:PoolCalGenerator/xlsxParser.dart' as xlsxParser;
 import 'package:PoolCalGenerator/iCalGenerator.dart' as iCalGenerator;
 
 main(List<String> arguments) async{
-  //pdfDownloader.download("newPool.pdf");
   checkForNewSchedule();
-  //Timer.periodic(Duration(days: 1), (Timer t) => checkForNewSchedule());
+  Cron().schedule(Schedule(weekdays: 1), (){checkForNewSchedule();});
 }
 
 void checkForNewSchedule() async {

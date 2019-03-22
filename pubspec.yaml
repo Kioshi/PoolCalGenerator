@@ -12,6 +12,7 @@ dependencies:
   spreadsheet_decoder: ^1.0.0
   intl: ^0.15.7
   uuid: ^1.0.3
+  cron: ^0.2.1
   HTMLSelecter:
     git: https://github.com/Kioshi/HTMLSelecter.git
 
