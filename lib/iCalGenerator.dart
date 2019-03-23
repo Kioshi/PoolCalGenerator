@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:PoolCalGenerator/ScheduleEvent.dart';
 import 'package:PoolCalGenerator/VersitMaker.dart';
 
+import 'package:date_calendar/date_calendar.dart';
+
 void generate(Map<int,List<ScheduleEvent>> eventsMap, String iCalPath)
 {
   print("iCalGenerator: Begin...");
@@ -24,8 +26,15 @@ void generate(Map<int,List<ScheduleEvent>> eventsMap, String iCalPath)
 
   eventsMap.forEach((week, events) {
     events.forEach((event){
-      DateTime dateTime = DateTime(year, 1,week*7-(6-event.day));
-      vCal.addVersit(VersitMaker.vEvent(dateTime, event.start, event.duration, event.students));
+
+        Calendar cal = GregorianCalendar(year);
+        int wd = cal.weekday-1;
+        Calendar cal1 = cal.addDays(7-(cal.weekday-1));
+        Calendar cal2 = cal1.addWeeks(week-1);
+        int minus = cal.weekday >= 6 ? 0 : 7;
+        Calendar cal3 = cal2.addDays(event.day-minus);
+
+      vCal.addVersit(VersitMaker.vEvent(cal3.toDateTimeUtc(), event.start, event.duration, event.students));
     });
   });
 
