@@ -13,7 +13,12 @@ Future download(String downloadPath) async {
   {
     if (element.innerHtml == "Skema med ledige tider engelsk version")
     {
-      await dio.download(element.attributes["href"], downloadPath, onProgress: (int received, int total){
+      String path = element.attributes["href"];
+      if (!path.startsWith("http"))
+      {
+        path = "https://mitsdu.dk"+path;
+      }
+      await dio.download(path, downloadPath, onProgress: (int received, int total){
         print("PDFDownloader: Downloading pdf schedule - $received/$total");
       });
       break;
